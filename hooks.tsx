@@ -69,7 +69,7 @@ export const useWidthLayout = (
   callback?: (width: number) => void,
 ) => {
   return useCallback(
-    ({nativeEvent}) => {
+    ({nativeEvent}: {nativeEvent: any}) => {
       const {
         layout: {width},
       } = nativeEvent;
@@ -103,15 +103,17 @@ export const useThumbFollower = (
   renderContent: undefined | ((value: number) => ReactNode),
   isPressed: boolean,
   allowOverflow: boolean,
-) => {
-  const xRef = useRef(new Animated.Value(0));
+  ): [
+    JSX.Element,
+    (thumbPositionInView: number, value: number) => void
+  ]|[] => {  const xRef = useRef(new Animated.Value(0));
   const widthRef = useRef(0);
   const contentContainerRef = useRef<FollowerContainer | null>(null);
 
   const {current: x} = xRef;
 
   const update = useCallback(
-    (thumbPositionInView, value) => {
+    (thumbPositionInView: number, value: number) => {
       const {current: width} = widthRef;
       const {current: containerWidth} = containerWidthRef;
       const position = thumbPositionInView - width / 2;
@@ -138,6 +140,8 @@ export const useThumbFollower = (
   const follower = (
     <Animated.View style={[transform, {opacity: isPressed ? 1 : 0}]}>
       <FollowerContainer
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         onLayout={handleLayout}
         ref={contentContainerRef}
         renderContent={renderContent}
@@ -174,7 +178,7 @@ export const useSelectedRail = (
       disableRange ? containerWidth - thumbWidth - leftValue : rightValue,
     );
   }, [inPropsRef, containerWidthRef, disableRange, thumbWidth, left, right]);
-  const styles = useMemo(
+  const styles: object = useMemo(
     () => ({
       position: 'absolute',
       left: I18nManager.isRTL ? right : left,
@@ -191,7 +195,7 @@ export const useSelectedRail = (
  */
 export const useLabelContainerProps = (floating: boolean) => {
   const [labelContainerHeight, setLabelContainerHeight] = useState(0);
-  const onLayout = useCallback(({nativeEvent}) => {
+  const onLayout = useCallback(({nativeEvent}: {nativeEvent: any}) => {
     const {
       layout: {height},
     } = nativeEvent;
