@@ -113,7 +113,9 @@ const Slider: React.FC<SliderProps> = ({
     const lowPosition =
       ((low - min) / (max - min)) * (containerWidth - thumbWidth);
     lowThumbX.setValue(lowPosition);
-    updateSelectedRail();
+    if (typeof updateSelectedRail === 'function') {
+      updateSelectedRail();
+    }
     onValueChanged?.(low, high, false);
   }, [
     disableRange,
@@ -141,7 +143,7 @@ const Slider: React.FC<SliderProps> = ({
 
   const handleContainerLayout = useWidthLayout(containerWidthRef, updateThumbs);
   const handleThumbLayout = useCallback(
-    ({nativeEvent}) => {
+    ({nativeEvent}: {nativeEvent: any}) => {
       const {
         layout: {width},
       } = nativeEvent;
@@ -195,7 +197,6 @@ const Slider: React.FC<SliderProps> = ({
         onShouldBlockNativeResponder: trueFunc,
 
         onMoveShouldSetPanResponder: (
-          evt: GestureResponderEvent,
           gestureState: PanResponderGestureState,
         ) => Math.abs(gestureState.dx) > 2 * Math.abs(gestureState.dy),
 
@@ -256,10 +257,14 @@ const Slider: React.FC<SliderProps> = ({
             (isLow ? lowThumbX : highThumbX).setValue(absolutePosition);
             onValueChanged?.(isLow ? value : low, isLow ? high : value, true);
             (isLow ? setLow : setHigh)(value);
-            labelUpdate &&
-            labelUpdate(gestureStateRef.current.lastPosition, value);
-            notchUpdate &&
-            notchUpdate(gestureStateRef.current.lastPosition, value);
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            labelUpdate && labelUpdate(gestureStateRef.current.lastPosition, value);
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            notchUpdate && notchUpdate(gestureStateRef.current.lastPosition, value);
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             updateSelectedRail();
           };
           handlePositionChange(downX);
