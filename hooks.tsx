@@ -178,7 +178,7 @@ export const useSelectedRail = (
       disableRange ? containerWidth - thumbWidth - leftValue : rightValue,
     );
   }, [inPropsRef, containerWidthRef, disableRange, thumbWidth, left, right]);
-  const styles = useMemo(
+  const styles: object = useMemo(
     () => ({
       position: 'absolute',
       left: I18nManager.isRTL ? right : left,

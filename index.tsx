@@ -196,9 +196,10 @@ const Slider: React.FC<SliderProps> = ({
         onPanResponderTerminate: trueFunc,
         onShouldBlockNativeResponder: trueFunc,
 
-        onMoveShouldSetPanResponder: (
-          gestureState: PanResponderGestureState,
-        ) => Math.abs(gestureState.dx) > 2 * Math.abs(gestureState.dy),
+        onMoveShouldSetPanResponder: ((
+            _e: GestureResponderEvent,
+            gestureState: PanResponderGestureState,
+          ) => Math.abs(gestureState.dx) > 2 * Math.abs(gestureState.dy)),
 
         onPanResponderGrant: ({nativeEvent}, gestureState) => {
           if (disabled) {
